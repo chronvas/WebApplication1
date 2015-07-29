@@ -1,0 +1,68 @@
+﻿@using System.Data.SqlClient;
+@using PagedList.Mvc;
+@*  palio -->>>>   @model IEnumerable<WebApplication1.Models.Movie>*@
+@model PagedList.IPagedList<WebApplication1.Models.Movie>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+    @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
+    {
+        <p>Find by Title: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string) 
+            Genre: @Html.DropDownList("movieGenre", "All")<input type="submit" value="Search.." />
+    </p>
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+@*        old was-->>>>    @Html.DisplayNameFor(model => model.Price)*@
+            @Html.ActionLink("Title",        "Index", new {sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Release Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Price",        "Index", new { sortOrder = ViewBag.PriceSortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Genre",        "Index", new { sortOrder = ViewBag.GenreSortParam, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReleaseDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Genre)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+     
+</table>
+
+
+@*pagination*@
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@*click on other page numbers goes to a new page with get and gives page, sortorder, currentfiter*@
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

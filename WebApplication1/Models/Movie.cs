@@ -22,8 +22,7 @@ namespace WebApplication1.Models
         public decimal Price { get; set; }
         public string Genre { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+
     }
 
     public class MovieDBContext : DbContext
